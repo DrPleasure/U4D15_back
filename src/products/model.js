@@ -9,11 +9,18 @@ let productSchema = new Schema({
     imageUrl: { type: String, required: true },
     price: { type: Number, required: true },
     category: { type: String, required: true },
-    reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
+    reviews_id: [{ type: Schema.Types.ObjectId, ref: "Review" }],
 },
 {
     timestamps: true, // this option automatically handles the createdAt and updatedAt fields
 });
+
+productSchema.virtual('reviews', {
+    ref: 'Review',
+    localField: 'reviews_id',
+    foreignField: 'product'
+})
+
 
 productSchema.static("findProductsWithReviews", async function (query) {
     const total = await this.countDocuments(query.criteria)

@@ -8,8 +8,8 @@ let productsRouter = express.Router();
 
 async function findProductById(req, res, next) {
     try {
-      let product = await product.findById(req.params.id);
-      if (!product) {
+        let product = await Product.findById(req.params.id);
+        if (!product) {
         return res.status(404).json({ message: "Product not found" });
       }
       res.product = product;
@@ -43,11 +43,9 @@ productsRouter.get("/", async (req, res) => {
 
         const page = req.query.page || 1;
         const limit = req.query.limit || 10;
-        const mongoQuery = q2m(query).skip((page - 1) * limit).limit(limit);
-
-        const { total, products } = await productsModel.findProductsWithReviews(mongoQuery)
+        const total = await productsModel.countDocuments(query);
+        const products = await productsModel.find(query).skip((page - 1) * limit).limit(limit).populate('reviews_id')
         res.send({
-          links: mongoQuery.links("http://localhost:3001/products", total),
           total,
           totalPages: Math.ceil(total / limit),
           products,
@@ -63,7 +61,7 @@ productsRouter.get("/", async (req, res) => {
 // Get one product with its reviews
 productsRouter.get("/:id", async (req, res) => {
     try {
-      let product = await Product.findById(req.params.id).populate('reviews')
+      let product = await Product.findById(req.params.id).populate('reviews_id')
       res.json(product);
     } catch (err) {
       res.status(500).json({ message: err.message });
