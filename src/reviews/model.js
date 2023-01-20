@@ -1,27 +1,27 @@
 import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
-const reviewsSchema = new Schema({
-    _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        auto: true,
-      },
-      comment: {
-        type: String,
-        required: true,
-      },
-      rate: {
-        type: Number,
-        required: true,
-      },
-     
+let reviewsSchema = new Schema(
+  {
+    comment: {
+      type: String,
+      required: true,
     },
-    {
-        timestamps: true, // this option automatically handles the createdAt and updatedAt fields
-      }
-    )
+    rate: {
+      type: Number,
+      required: true,
+    },
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+    },
+  },
+  {
+    timestamps: true, // this option automatically handles the createdAt and updatedAt fields
+  }
+);
 
-const Review = model("Review", reviewsSchema);
+let Review = model("Review", reviewsSchema);
 
 export default Review;

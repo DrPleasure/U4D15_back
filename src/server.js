@@ -9,6 +9,7 @@ import {
   notFoundHandler,
 } from "./errorHandlers.js"
 import productsRouter from "./products/index.js"
+import reviewsRouter from "./reviews/index.js"
 
 const server = express()
 const port = process.env.PORT || 3001
@@ -19,6 +20,7 @@ server.use(express.json())
 
 // ******************************** ENDPOINTS *****************************************
 server.use("/products", productsRouter)
+server.use("/reviews", reviewsRouter)
 
 
 
